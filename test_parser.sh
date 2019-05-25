@@ -5,16 +5,16 @@ set -uo
 now=$(date +'%s')
 
 make_1_case_fail(){
-	sed -i "s/#assert false/assert false/g" features/step_definitions/b.rb
+    sed -i "s/#assert false/assert false/g" features/step_definitions/b.rb
 }
 
 make_1_case_pass(){
-	sed -i "s/assert false/#assert false/g" features/step_definitions/b.rb
+    sed -i "s/assert false/#assert false/g" features/step_definitions/b.rb
 }
 
 clean_files()
 {
-  rm ${now}-test.json ${now}-rerun.json ${now}-new-report.json
+    rm ${now}-test.json ${now}-rerun.json ${now}-new-report.json
 }
 
 log_format="-f json_pretty --strict -o"
