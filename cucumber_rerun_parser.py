@@ -161,7 +161,7 @@ class CucumberRerunReprotParser(object):
             logging.info('There is no content to write')
 
 if __name__ == '__main__':
-	parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser()
     parser.add_argument('--rerun-report', help='The rerun json report path')
     parser.add_argument('--origin-report', help='The origin json report path')
     parser.add_argument('--new-report', help='The new json report path')
