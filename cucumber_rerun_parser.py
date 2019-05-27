@@ -57,6 +57,15 @@ class CucumberRerunReprotParser(object):
             raise Exception(
                 'Cannot write the new report {} with content {}'.format(new_json_report))
 
+    def __get_total_scenarios_num(self, data):
+        scenarios_num = 0
+        for features in data:
+            for element in features['elements']:
+                if element['type']=='scenario':
+                    scenarios_num += 1
+        return scenarios_num
+
+
     def get_passed_scenario_from_rerun_report(self):
         """
         return {}
@@ -67,14 +76,20 @@ class CucumberRerunReprotParser(object):
         logging.info('Get scenarios and results maps from {}'.format(
             self.rerun_json_report))
         scenarios_and_results = {}
-        scenarios_num = len(raw_data)
-        if scenarios_num > 0:
-            for item in raw_data:
-                name = item['elements'][0].get('name')
-                scenarios_and_results[name] = 'passed'
-                for step in item['elements'][0].get('steps'):
-                    if step.get('result').get('status') == 'failed':
-                        scenarios_and_results[name] = 'failed'
+        # It is the feature number not the scenario number
+        scenarios_num = self.__get_total_scenarios_num(raw_data)
+
+        scenarios_and_results={}
+        if scenarios_num > 0 :
+            for features in raw_data:
+                for element in features['elements']:
+                    if element['type']=='scenario':
+                        id=element['id']
+                        result='passed'
+                        for step in element['steps']:
+                            if step['result']['status']=='failed':
+                                result='failed'
+                        scenarios_and_results[id]=result
 
             if len(scenarios_and_results) == scenarios_num:
                 logging.info('Have got all scenarios and results:')
@@ -84,10 +99,13 @@ class CucumberRerunReprotParser(object):
                     'Scenarios total num is changed! Something should be wrong!')
 
             scenarios_and_results_copy = scenarios_and_results.copy()
-            logging.info('Pop failed scenarios')
-            for key in scenarios_and_results_copy.keys():
-                if scenarios_and_results[key] == 'failed':
-                    scenarios_and_results.pop(key)
+            if 'failed' in list(scenarios_and_results.values()):
+                logging.info('Pop failed scenarios')
+                for key in scenarios_and_results_copy.keys():
+                    if scenarios_and_results[key] == 'failed':
+                        scenarios_and_results.pop(key)
+            else:
+                logging.info('Rerun scenarios are passed.')
 
             if len(scenarios_and_results) <= 0:
                 logging.info('There is no rerun passed scenarios.')
@@ -116,32 +134,25 @@ class CucumberRerunReprotParser(object):
                 self.original_json_report))
             raw_data = self.__read_json(self.original_json_report)
 
-            cases_num = len(raw_data)
-            if cases_num > 0:
+            scenarios_num = self.__get_total_scenarios_num(raw_data)
+            if scenarios_num > 0:
                 logging.info(
-                    "There are {} scenarios totally.".format(str(cases_num)))
+                    "There are {} scenarios totally.".format(str(scenarios_num)))
                 logging.info("Rewrite the results of {} scenarios".format(
                     str(len(scenarios_and_results))))
 
-                logging.info('Pop the outdated faile:d scenarios')
-                raw_data_backup = raw_data[:]
-                for item in raw_data_backup:
-                    name = item['elements'][0].get('name')
-                    if name in scenarios_and_results.keys():
-                        logging.info('Poping scenario:{}'.format(name))
-                        raw_data.pop(raw_data.index(item))
+                for features in raw_data:
+                    for element in features['elements']:
+                        if element['type']=='scenario' and element['id'] in scenarios_and_results:
+                            for step in element['steps']:
+                                duration='3m'
+                                step['result']= {'status': 'passed', 'duration': 9187}
 
-                logging.info('Add the rerun passed scenarios')
-                for item in scenarios_and_results:
-                    logging.info(
-                        'Appending the passed scenario:{}'.format(item))
-                    raw_data.append(item)
-
-                if len(raw_data) == cases_num:
+                if self.__get_total_scenarios_num(raw_data) == scenarios_num:
                     logging.info("Complete the result refresh")
                     logging.info(
-                        "Now there are {} cases passed".format(str(cases_num)))
-                    return json.dumps(raw_data)
+                        "Now there are {} cases passed".format(str(scenarios_num)))
+                    return json.dumps(raw_data, indent=4)
                 else:
                     raise Exception(
                         'Scenarios total num is changed! Something should be wrong!')

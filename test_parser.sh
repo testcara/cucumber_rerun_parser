@@ -15,6 +15,7 @@ make_1_case_pass(){
 clean_files()
 {
     rm ${now}-test.json ${now}-rerun.json ${now}-new-report.json
+    rm rerun.txt
 }
 
 log_format="-f json_pretty --strict -o"
@@ -36,7 +37,7 @@ echo ${rerun_case}
 ${rerun_case_to_show}
 ${rerun_case}
 
-echo "---> Parser will show 3 cases are passed ..."
+echo "---> Parser will show 5 cases are passed ..."
 
 python3 cucumber_rerun_parser.py --rerun-report=${now}-rerun.json --origin-report=${now}-test.json --new-report=${now}-new-report.json
 clean_files

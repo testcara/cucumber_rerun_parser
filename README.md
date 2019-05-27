@@ -24,29 +24,23 @@ python3 cucumber_rerun_parser.py --rerun-report=rerun-report-name.json --origin-
 ```
 Logs like below will show us the detailed process:
 ```
-2019-05-24 17:57:18,977 [cucumber_rerun_parser.py::get_passed_scenario_from_rerun_report] INFO Read the data from rerun-report-name.json
-2019-05-24 17:57:18,978 [cucumber_rerun_parser.py::get_passed_scenario_from_rerun_report] INFO Get scenarios and results maps from rerun-report-name.json
-2019-05-24 17:57:18,978 [cucumber_rerun_parser.py::get_passed_scenario_from_rerun_report] INFO Have got all scenarios and results:
-2019-05-24 17:57:18,978 [cucumber_rerun_parser.py::get_passed_scenario_from_rerun_report] INFO {'Login as qa user': 'passed', 'Login as admin user': 'passed'}
-2019-05-24 17:57:18,978 [cucumber_rerun_parser.py::get_passed_scenario_from_rerun_report] INFO Pop failed scenarios
-2019-05-24 17:57:18,978 [cucumber_rerun_parser.py::get_passed_scenario_from_rerun_report] INFO Have got all passed scenarios:
-2019-05-24 17:57:18,978 [cucumber_rerun_parser.py::get_passed_scenario_from_rerun_report] INFO {'Login as qa user': 'passed', 'Login as admin user': 'passed'}
-2019-05-24 17:57:18,978 [cucumber_rerun_parser.py::refresh_report_with_rerun_passed_scenarios] INFO Update the origin-report-name.json with rerun results {'Login as qa user': 'passed', 'Login as admin user': 'passed'}
-2019-05-24 17:57:18,978 [cucumber_rerun_parser.py::refresh_report_with_rerun_passed_scenarios] INFO Get the data from test.json
-2019-05-24 17:57:18,978 [cucumber_rerun_parser.py::refresh_report_with_rerun_passed_scenarios] INFO There are 3 scenarios totally.
-2019-05-24 17:57:18,978 [cucumber_rerun_parser.py::refresh_report_with_rerun_passed_scenarios] INFO Rewrite the results of 2 scenarios
-2019-05-24 17:57:18,978 [cucumber_rerun_parser.py::refresh_report_with_rerun_passed_scenarios] INFO Pop the outdated faile:d scenarios
-2019-05-24 17:57:18,978 [cucumber_rerun_parser.py::refresh_report_with_rerun_passed_scenarios] INFO Poping scenario:Login as admin user
-2019-05-24 17:57:18,978 [cucumber_rerun_parser.py::refresh_report_with_rerun_passed_scenarios] INFO Poping scenario:Login as qa user
-2019-05-24 17:57:18,978 [cucumber_rerun_parser.py::refresh_report_with_rerun_passed_scenarios] INFO Add the rerun passed scenarios
-2019-05-24 17:57:18,979 [cucumber_rerun_parser.py::refresh_report_with_rerun_passed_scenarios] INFO Appending the passed scenario:Login as qa user
-2019-05-24 17:57:18,979 [cucumber_rerun_parser.py::refresh_report_with_rerun_passed_scenarios] INFO Appending the passed scenario:Login as admin user
-2019-05-24 17:57:18,979 [cucumber_rerun_parser.py::refresh_report_with_rerun_passed_scenarios] INFO Complete the result refresh
-2019-05-24 17:57:18,979 [cucumber_rerun_parser.py::write_new_report] INFO Write the new json report new-report-name.json
-2019-05-24 17:57:18,979 [cucumber_rerun_parser.py::write_new_report] INFO Complete to generate the new report new-report-name.json
+2019-05-27 19:46:14,406 [cucumber_rerun_parser.py::get_passed_scenario_from_rerun_report] INFO Read the data from 1558957573-rerun.json
+2019-05-27 19:46:14,406 [cucumber_rerun_parser.py::get_passed_scenario_from_rerun_report] INFO Get scenarios and results maps from 1558957573-rerun.json
+2019-05-27 19:46:14,406 [cucumber_rerun_parser.py::get_passed_scenario_from_rerun_report] INFO Have got all scenarios and results:
+2019-05-27 19:46:14,406 [cucumber_rerun_parser.py::get_passed_scenario_from_rerun_report] INFO {'login_1;login-as-admin-user;;2': 'passed', 'login_3;login-as-qa-user': 'passed', 'login_1;login-as-admin-user;;3': 'passed', 'login_2;login-as-devel-user': 'passed'}
+2019-05-27 19:46:14,406 [cucumber_rerun_parser.py::get_passed_scenario_from_rerun_report] INFO Rerun scenarios are passed.
+2019-05-27 19:46:14,406 [cucumber_rerun_parser.py::get_passed_scenario_from_rerun_report] INFO Have got all passed scenarios:
+2019-05-27 19:46:14,407 [cucumber_rerun_parser.py::get_passed_scenario_from_rerun_report] INFO {'login_1;login-as-admin-user;;2': 'passed', 'login_3;login-as-qa-user': 'passed', 'login_1;login-as-admin-user;;3': 'passed', 'login_2;login-as-devel-user': 'passed'}
+2019-05-27 19:46:14,407 [cucumber_rerun_parser.py::refresh_report_with_rerun_passed_scenarios] INFO Update the report 1558957573-test.json with rerun results {'login_1;login-as-admin-user;;2': 'passed', 'login_3;login-as-qa-user': 'passed', 'login_1;login-as-admin-user;;3': 'passed', 'login_2;login-as-devel-user': 'passed'}
+2019-05-27 19:46:14,407 [cucumber_rerun_parser.py::refresh_report_with_rerun_passed_scenarios] INFO Get the data from 1558957573-test.json
+2019-05-27 19:46:14,407 [cucumber_rerun_parser.py::refresh_report_with_rerun_passed_scenarios] INFO There are 5 scenarios totally.
+2019-05-27 19:46:14,407 [cucumber_rerun_parser.py::refresh_report_with_rerun_passed_scenarios] INFO Rewrite the results of 4 scenarios
+2019-05-27 19:46:14,407 [cucumber_rerun_parser.py::refresh_report_with_rerun_passed_scenarios] INFO Complete the result refresh
+2019-05-27 19:46:14,407 [cucumber_rerun_parser.py::refresh_report_with_rerun_passed_scenarios] INFO Now there are 5 cases passed
+2019-05-27 19:46:14,408 [cucumber_rerun_parser.py::write_new_report] INFO Write the new json report 1558957573-new-report.json
+2019-05-27 19:46:14,408 [cucumber_rerun_parser.py::write_new_report] INFO Complete to generate the new report 1558957573-new-report.json
+
 ```
 Have a try before enjoy it on real projects
 ==
-The 'features' dir is just the test dir you can have a try to see how it works. You can try 'test_parser.sh' to do the testing and see the whole process.
-
-
+The 'features' dir is just the test dir you can have a try to see how it works. You can try 'test_parser.sh' to do the testing and see the whole process
