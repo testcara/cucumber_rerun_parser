@@ -105,7 +105,14 @@ class CucumberRerunReprotParser(object):
                     if scenarios_and_results[key] == 'failed':
                         scenarios_and_results.pop(key)
             else:
-                logging.info('Rerun scenarios are passed.')
+                logging.info('Rerun scenarios are all passed.')
+
+            logging.info('Replace the result "passed" as more meaningful scenario content')
+            passed_scenarios_id_and_content_map = {}
+            for features in raw_data:
+                for scenarios in features['elements']:
+                    if scenarios['type']=='scenario' and scenarios['id'] in list(scenarios_and_results.keys()):
+                        passed_scenarios_id_and_content_map[scenarios['id']] = scenarios
 
             if len(scenarios_and_results) <= 0:
                 logging.info('There is no rerun passed scenarios.')
@@ -113,23 +120,23 @@ class CucumberRerunReprotParser(object):
             else:
                 logging.info('Have got all passed scenarios:')
                 logging.info(scenarios_and_results)
-            return scenarios_and_results
+            return passed_scenarios_id_and_content_map
         else:
             logging.info("There is no content in {}".format(
                 self.rerun_json_report))
             return {}
 
-    def refresh_report_with_rerun_passed_scenarios(self, scenarios_and_results):
+    def refresh_report_with_rerun_passed_scenarios(self, passed_scenarios_id_and_content_map):
         """
         return json or none
         """
-        if len(scenarios_and_results) <= 0:
+        if len(passed_scenarios_id_and_content_map) <= 0:
             logging.info(
                 'No rerun passed scenarios. No refreshment is needed!')
             return
         else:
             logging.info("Update the report {} with rerun results {}".format(
-                self.original_json_report, scenarios_and_results))
+                self.original_json_report, passed_scenarios_id_and_content_map))
             logging.info("Get the data from {}".format(
                 self.original_json_report))
             raw_data = self.__read_json(self.original_json_report)
@@ -139,14 +146,15 @@ class CucumberRerunReprotParser(object):
                 logging.info(
                     "There are {} scenarios totally.".format(str(scenarios_num)))
                 logging.info("Rewrite the results of {} scenarios".format(
-                    str(len(scenarios_and_results))))
+                    str(len(passed_scenarios_id_and_content_map))))
 
                 for features in raw_data:
+                    feature_index = raw_data.index(features)
                     for element in features['elements']:
-                        if element['type']=='scenario' and element['id'] in scenarios_and_results:
-                            for step in element['steps']:
-                                duration='3m'
-                                step['result']= {'status': 'passed', 'duration': 9187}
+                        element_index = features['elements'].index(element)
+                        if element['type']=='scenario' and element['id'] in list(passed_scenarios_id_and_content_map.keys()):
+                            element = passed_scenarios_id_and_content_map[element['id']]
+                            raw_data[feature_index]['elements'][element_index] = element
 
                 if self.__get_total_scenarios_num(raw_data) == scenarios_num:
                     logging.info("Complete the result refresh")
