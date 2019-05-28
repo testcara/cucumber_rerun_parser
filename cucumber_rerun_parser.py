@@ -9,7 +9,6 @@ logging.basicConfig(
     level=logging.DEBUG
 )
 
-
 class CucumberRerunReprotParser(object):
     """
     The class is used to parser the rerun json report, then

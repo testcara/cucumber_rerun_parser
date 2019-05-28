@@ -8,7 +8,7 @@ Talking about writing results to json files, the command could be:
 ```
 cucumber --format json_pretty --strict -o origin-report.json -f pretty -f rerun --out rerun.txt || cucumber @rerun.txt --format json_pretty --strict -o rerun-report.json
 ```
-If we run our cases in Jenkins jobs, the cucumber report plugin can be specified to collect json files to generate the preety html report. However, if you use the command like above, the report will not be perfect.
+If we run our cases in Jenkins jobs, the cucumber report plugin can be specified to collect json files to generate the pretty html report. However, if you use the command like above, the report will not be perfect.
 If there are 10 scenarios, 1 scenario is failed at the first time but passed by rerun. The report will show you 11 scenarios and the scenarios are shown 2 time, one is shown as passed and the other is failed.
 
 How the parser works
@@ -41,6 +41,30 @@ Logs like below will show us the detailed process:
 2019-05-27 20:44:46,055 [cucumber_rerun_parser.py::write_new_report] INFO Write the new json report 1558961085-new-report.json
 2019-05-27 20:44:46,056 [cucumber_rerun_parser.py::write_new_report] INFO Complete to generate the new report 1558961085-new-report.json
 
+```
+As default, the parser works well when there are rerun. If all cases are passed, there is no rerun, the parser will raise one error. More, as default, it will not delete any report files but write one new one.
+In your Jenkins project, if we would like to enjoy the parser to support every situations, we need to add the following control:
+* When all scenarios are passed, there is no need to trigger the rerun parser.
+* When all rerun scenarios are failed, there is no need to rewrite the new report.
+* If the parser write some new report, it is better we can delete obsoleted reports to avoid unexpected duplication.
+The following snippet could help you:
+```
+if [[ $(find . -name "*rerun*.json") =~ "rerun" ]]
+then
+  echo "Have got the rerun json and call the rerun parser now!"
+  cp /tmp/TS2_db/cucumber_rerun_parser.py .
+  python3 cucumber_rerun_parser.py --rerun-report=rerun.json --origin-report=cucumber-report-${app_name}.json --new-report=${app_name}-new-report.json
+else
+  echo "No rerun json, we would not call the rerun parser!"
+fi
+if [[ $(find . -name "*new-report*.json") =~ "new-report" ]]
+then
+  echo "Have got the new report and delete the obsolete one now!"
+  rm -rf cucumber-report-${app_name}.json rerun.json
+  mv ${app_name}-new-report.json cucumber-report-${app_name}.json
+else
+  echo "No new report json, we would keep the origin reports"
+fi
 ```
 Have a try before enjoy it on real projects
 ==
