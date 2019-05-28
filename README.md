@@ -42,11 +42,12 @@ Logs like below will show us the detailed process:
 2019-05-27 20:44:46,056 [cucumber_rerun_parser.py::write_new_report] INFO Complete to generate the new report 1558961085-new-report.json
 
 ```
-As default, the parser works well when there are rerun. If all cases are passed, there is no rerun, the parser will raise one error. More, as default, it will not delete any report files but write one new one.
-In your Jenkins project, if we would like to enjoy the parser to support every situations, we need to add the following control:
+As default, the parser works well when rerun happens. If all cases are passed, there is no rerun triggered and the parser will raise one error. More, as default, it will not delete any report files but write one new one.
+In the Jenkins project, if we would like to enjoy the parser to support all situations, we need to add the following control:
 * When all scenarios are passed, there is no need to trigger the rerun parser.
 * When all rerun scenarios are failed, there is no need to rewrite the new report.
 * If the parser write some new report, it is better we can delete obsoleted reports to avoid unexpected duplication.
+
 The following snippet could help you:
 ```
 if [[ $(find . -name "*rerun*.json") =~ "rerun" ]]
